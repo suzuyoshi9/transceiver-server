@@ -89,7 +89,7 @@ public class DatabaseClass{
     	PreparedStatement pst = this.conn.prepareStatement(sql);
     	ResultSet rs = pst.executeQuery();
     	while(rs.next()){
-    		list.add(rs.getString(0));
+    		list.add(rs.getString("regist_id"));
     	}
     	return list;
     }
@@ -102,6 +102,17 @@ public class DatabaseClass{
     	pst.setString(2, path);
     	if(pst.executeUpdate()==1) return true;
     	else return false;
+    }
+    
+    public boolean isLoggedin(String username) throws SQLException{
+    	String sql="select logged_in from user where name=?";
+    	PreparedStatement pst = this.conn.prepareStatement(sql);
+    	pst.setString(1, username);
+    	ResultSet rs = pst.executeQuery();
+    	if(rs.next()){
+    		return rs.getInt("logged_in")==1 ? true:false; 
+    	}
+    	else throw new SQLException("User NotFound");
     }
     
     private boolean isUserExist(String username) throws SQLException{
@@ -122,7 +133,7 @@ public class DatabaseClass{
         pst.setString(1,username);
         ResultSet rs = pst.executeQuery();
         if(!rs.next()) throw new SQLException("User NotFound");
-        String pass = rs.getString(0);
+        String pass = rs.getString("pass");
         if(input_pass.equals(pass)) return true;
         else return false;
     }
@@ -132,10 +143,7 @@ public class DatabaseClass{
     	PreparedStatement pst = this.conn.prepareStatement(sql);
     	pst.setString(1, username);
     	ResultSet rs = pst.executeQuery();
-    	if(rs.next()) return rs.getInt(0);
+    	if(rs.next()) return rs.getInt("ID");
     	else throw new SQLException("User NotFound");
-    }
-    
-    
-    
+    }    
 }

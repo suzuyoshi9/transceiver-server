@@ -1,6 +1,7 @@
 package sss;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -66,9 +67,11 @@ public class GCMServlet extends HttpServlet {
      * -value=RegistrationId: AndroidがGCMから取得した端末ＩＤ。
      */
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res) 
+    public void doPost(HttpServletRequest req, HttpServletResponse res) 
             throws IOException {
-
+    	res.setContentType("text/html; charset=UTF-8");
+    	PrintWriter out = res.getWriter();
+    	
         System.out.println("=> "+req.getQueryString());
         String action         = req.getParameter("action");
         String registrationId = req.getParameter("regId");
@@ -78,6 +81,9 @@ public class GCMServlet extends HttpServlet {
             // 端末登録、Androidから呼ばれる。
             try {
 				db.registAndroid(userId,registrationId);
+				res.setStatus(200);
+				out.println("register ok");
+				return;
 			} catch (SQLException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -87,6 +93,8 @@ public class GCMServlet extends HttpServlet {
             // 端末登録解除、Androidから呼ばれる。
             try {
 				db.unregistAndroid(userId);
+				out.println("unregister ok");
+				return;
 			} catch (SQLException e) {
 				// TODO 自動生成された catch ブロック
 				e.printStackTrace();
@@ -96,11 +104,12 @@ public class GCMServlet extends HttpServlet {
         }
     }
     
-    public void sendPathInfo(String path) throws IOException{
+    public static void sendPathInfo(String path) throws IOException, ClassNotFoundException, SQLException{
         // メッセージ送信。任意の送信アプリから呼ばれる。
     	List<String> registers = null;
+    	DatabaseClass dba = new DatabaseClass();
 		try {
-			registers = db.getRegisteredIDs();
+			registers = dba.getRegisteredIDs();
 		} catch (SQLException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
