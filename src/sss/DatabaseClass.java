@@ -26,6 +26,10 @@ public class DatabaseClass{
 
     public int login(String username, String password) throws SQLException{
         boolean result = checkPassword(username,password);
+        String sql="insert into user(logged_in,last_login) values(1,now())";
+        Statement st = this.conn.createStatement();
+        st.executeUpdate(sql);
+        
         if(result) return 1;
         else return 0;
     }
@@ -66,6 +70,7 @@ public class DatabaseClass{
     
     public boolean registAndroid(String userid,String registID) throws SQLException{
     	int uid=this.getUid(userid);
+    	if(!this.unregistAndroid(registID)) return false;
     	String sql="insert into notification(uid,regist_id) values(?,?)";
     	PreparedStatement pst = this.conn.prepareStatement(sql);
     	pst.setInt(1, uid);
@@ -74,13 +79,11 @@ public class DatabaseClass{
     	else return false;
     }
     
-    public boolean unregistAndroid(String userid) throws SQLException{
-    	int uid=this.getUid(userid);
-    	String sql="delete from notification where uid=?";
+    public boolean unregistAndroid(String registid) throws SQLException{
+    	String sql="delete from notification where regist_id=?";
     	PreparedStatement pst = this.conn.prepareStatement(sql);
-    	pst.setInt(1, uid);
-    	if(pst.executeUpdate()==1) return true;
-    	else return false;
+    	pst.setString(1, registid);
+    	return true;
     }
     
     public List<String> getRegisteredIDs() throws SQLException{

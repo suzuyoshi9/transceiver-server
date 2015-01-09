@@ -48,3 +48,4 @@ local.properties
 hs_err_pid*
 
 src/sss/Info.java
+/build/

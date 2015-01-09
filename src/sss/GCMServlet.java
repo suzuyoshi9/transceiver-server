@@ -104,7 +104,7 @@ public class GCMServlet extends HttpServlet {
         }
     }
     
-    public static void sendPathInfo(String path) throws IOException, ClassNotFoundException, SQLException{
+    public static void sendPathInfo(String path,String sender_id) throws IOException, ClassNotFoundException, SQLException{
         // メッセージ送信。任意の送信アプリから呼ばれる。
     	List<String> registers = null;
     	DatabaseClass dba = new DatabaseClass();
@@ -117,9 +117,11 @@ public class GCMServlet extends HttpServlet {
         Sender sender = new Sender(API_KEY);
         Message message = new Message.Builder().addData("msg", path).build();
         for(String regist:registers){
+        	if(regist.equals(sender_id)) continue;
             Result result = sender.send(message, regist, RETRY_COUNT);
 //            res.setContentType("text/plain");
 //            res.getWriter().println("Result="+result);
+            System.out.println("Result="+result);
         }
     }
 }

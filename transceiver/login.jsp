@@ -4,5 +4,5 @@
   DatabaseClass db = new DatabaseClass();
   String user=request.getParameter("user");
   String pass=request.getParameter("pass");
-  out.println(db.login(user,pass));
+  out.print(db.login(user,pass));
 %>

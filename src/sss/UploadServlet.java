@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.SQLException;
+import java.util.Random;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -40,6 +41,7 @@ public class UploadServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		DatabaseClass db = null;
 		String userid=request.getParameter("userId");
+		String registid=request.getParameter("regId");
 		String Filename = null;
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		ServletContext servletContext = this.getServletConfig().getServletContext();
@@ -50,7 +52,7 @@ public class UploadServlet extends HttpServlet {
 		
 		Part filePart = request.getPart("file");
 		InputStream in = filePart.getInputStream();
-		Filename = this.getFilename(filePart);
+		Filename = this.getRandomString(10)+".wav";
 		File f = new File(uppath+Filename);
 		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(f));
 		while((size=in.read(buff))>0){
@@ -62,7 +64,7 @@ public class UploadServlet extends HttpServlet {
 		try {
 			db = new DatabaseClass();
 			db.addFile(userid, Filename);
-			//GCMServlet.sendPathInfo(new String(userid+","+Filename));
+			GCMServlet.sendPathInfo(new String(userid+","+Filename),registid);
 		} catch (ClassNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
@@ -81,5 +83,16 @@ public class UploadServlet extends HttpServlet {
 			}
 		}
 		return null;
+	}
+	
+	private String getRandomString(int cnt) {
+		  final String chars ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		  Random rnd=new Random();
+		  StringBuffer buf = new StringBuffer();
+		  for(int i=0;i<cnt;i++){
+		   int val=rnd.nextInt(chars.length());
+		   buf.append(chars.charAt(val));
+		  }
+		  return buf.toString();
 	}
 }
