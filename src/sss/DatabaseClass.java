@@ -30,12 +30,12 @@ public class DatabaseClass{
         boolean result = checkPassword(username,password);
         if(!result) return 0;
         System.out.println("pass ok");
-        /* String sql="update user set logged_in = ? where name = ?";
+        String sql="update user set logged_in = ? where name = ?";
         PreparedStatement pst = this.conn.prepareStatement(sql);
-        pst.setInt(1, 1);
-        pst.setString(2, username);
-        pst.executeUpdate(sql); */
-        return 1;
+        pst.setInt(1,1);
+        pst.setString(2,username);
+        if(pst.executeUpdate()==1) return 1;
+        else return 0;
 
     }
 
@@ -86,12 +86,20 @@ public class DatabaseClass{
     }
     
     public boolean registAndroid(String userid,String registID) throws SQLException{
+    	Date date = new Date(System.currentTimeMillis());
+    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	int uid=this.getUid(userid);
+    	if(this.isalreadyregistered(uid, registID)){
+    		String sql="update notification set last_login = ? where regist_id = ?";
+    		PreparedStatement pst = this.conn.prepareStatement(sql);
+    		pst.setString(1, df.format(date));
+    		pst.setString(2, registID);
+    		if(pst.executeUpdate()==1) return true;
+    		else return false;
+    	}
     	if(!this.unregistAndroid(registID)) return false;
     	String sql="insert into notification(uid,regist_id,last_login) values(?,?,?)";
     	PreparedStatement pst = this.conn.prepareStatement(sql);
-    	Date date = new Date(System.currentTimeMillis());
-    	DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     	pst.setInt(1, uid);
     	pst.setString(2, registID);
     	pst.setString(3, df.format(date));
@@ -105,6 +113,15 @@ public class DatabaseClass{
     	pst.setString(1, registid);
     	pst.executeUpdate();
     	return true;
+    }
+    
+    public boolean isalreadyregistered(int uid,String registID) throws SQLException{
+    	String sql="select ID from notification where uid=? and regist_id=?";
+    	PreparedStatement pst = this.conn.prepareStatement(sql);
+    	pst.setInt(1, uid);
+    	pst.setString(2, registID);
+    	ResultSet rs = pst.executeQuery();
+    	return rs.next();
     }
     
     public List<String> getRegisteredIDs(String sender_id) throws SQLException{
@@ -177,7 +194,6 @@ public class DatabaseClass{
         ResultSet rs = pst.executeQuery();
         if(!rs.next()) throw new SQLException("User NotFound");
         String pass = rs.getString("pass");
-        System.out.println("aaa");
         if(input_pass.equals(pass)) return true;
         else return false;
     }
@@ -216,6 +232,15 @@ public class DatabaseClass{
     	ResultSet rs = pst.executeQuery();
     	if(rs.next()) return rs.getString("name");
     	else throw new SQLException("Group NotFound");
+    }
+    
+    @Override
+    protected void finalize() throws Throwable{
+    	try{
+    		super.finalize();
+    	}finally{
+    		this.close();
+    	}
     }
     
 }

@@ -125,5 +125,6 @@ public class GCMServlet extends HttpServlet {
 //            res.getWriter().println("Result="+result);
             System.out.println("Result="+result);
         }
+        dba.close();    
     }
 }

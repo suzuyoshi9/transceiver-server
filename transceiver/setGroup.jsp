@@ -7,12 +7,10 @@
   List<String> list;
   String user=request.getParameter("user");
   String regid=request.getParameter("regId");
+  String group=request.getParameter("groupname");
   if(db.isLoggedin(user)){
-	  list=db.getGroups(regid);
-	  //out.println(list.size());
-	  for(String name:list){
-		  out.println(name);
-	  }
+	  if(db.changeGroup(regid, group)) out.println("ok");
+	  else out.println("ng");
   }
   else out.println("not logged_in");
   db.close();

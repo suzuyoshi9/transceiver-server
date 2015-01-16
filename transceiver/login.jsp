@@ -6,4 +6,5 @@
   String user=request.getParameter("user");
   String pass=request.getParameter("pass");
   out.print(db.login(user,pass));
+  db.close();
 %>

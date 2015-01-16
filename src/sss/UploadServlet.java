@@ -65,13 +65,14 @@ public class UploadServlet extends HttpServlet {
 			db = new DatabaseClass();
 			db.addFile(userid,registid,Filename);
 			GCMServlet.sendPathInfo(new String(userid+","+Filename),registid);
+			db.close();
 		} catch (ClassNotFoundException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
-		}		
+		}
 		response.getWriter().print("upload ok\n");
 		response.getWriter().flush();
 	}

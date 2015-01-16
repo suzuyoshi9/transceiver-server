@@ -12,4 +12,5 @@
 	  else out.println("ng");
   }
   else out.println("not logged_in");
+  db.close();
 %>

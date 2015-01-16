@@ -15,4 +15,5 @@
   }
   if(db.addUser(user,nickname,pass1)) out.println("ok");
   else out.println("ng");
+  db.close();
 %>
