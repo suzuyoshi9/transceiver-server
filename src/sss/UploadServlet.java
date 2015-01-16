@@ -63,7 +63,7 @@ public class UploadServlet extends HttpServlet {
 		
 		try {
 			db = new DatabaseClass();
-			db.addFile(userid, Filename);
+			db.addFile(userid,registid,Filename);
 			GCMServlet.sendPathInfo(new String(userid+","+Filename),registid);
 		} catch (ClassNotFoundException e) {
 			// TODO 自動生成された catch ブロック

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=Shift_JIS"
     pageEncoding="Shift_JIS" errorPage="error.jsp"%>
+<%@ page trimDirectiveWhitespaces="true"%>
 <%@ page import="sss.*" %>
 <%
   request.setCharacterEncoding("UTF-8");

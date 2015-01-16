@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8" errorPage="error.jsp" %>
+<%@ page trimDirectiveWhitespaces="true"%>
 <%@ page import="sss.*" %>
 <%
   DatabaseClass db = new DatabaseClass();

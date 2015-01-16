@@ -109,14 +109,16 @@ public class GCMServlet extends HttpServlet {
     	List<String> registers = null;
     	DatabaseClass dba = new DatabaseClass();
 		try {
-			registers = dba.getRegisteredIDs();
+			registers = dba.getRegisteredIDs(sender_id);
 		} catch (SQLException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
         Sender sender = new Sender(API_KEY);
         Message message = new Message.Builder().addData("msg", path).build();
+        System.out.println("sender:"+sender_id);
         for(String regist:registers){
+        	System.out.println("registered_id:"+regist);
         	if(regist.equals(sender_id)) continue;
             Result result = sender.send(message, regist, RETRY_COUNT);
 //            res.setContentType("text/plain");
