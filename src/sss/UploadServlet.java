@@ -77,15 +77,11 @@ public class UploadServlet extends HttpServlet {
 		response.getWriter().flush();
 	}
 	
-	private String getFilename(Part part){
-		for(String cd : part.getHeader("Content-Disposition").split(";")){
-			if(cd.trim().startsWith("filename")){
-				return cd.substring(cd.indexOf('=')+1).trim().replace("\"", "");
-			}
-		}
-		return null;
-	}
-	
+	/**
+	 * ランダムな文字列を作成
+	 * @param cnt
+	 * @return
+	 */
 	private String getRandomString(int cnt) {
 		  final String chars ="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 		  Random rnd=new Random();

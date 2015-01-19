@@ -2,3 +2,4 @@
     pageEncoding="utf-8" isErrorPage="true"%>
 <%@ page trimDirectiveWhitespaces="true"%>
 <% out.println(exception.toString()); %>
+<% exception.printStackTrace(); %>

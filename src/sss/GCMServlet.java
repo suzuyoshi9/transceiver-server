@@ -17,12 +17,10 @@ import com.google.android.gcm.server.Sender;
 
 /**
  * GCMのサーバ・サンプル・サーブレット
- * - API
- * -- ?action=register&userId={ユーザID}&regId={端末ＩＤ}
- * -- ?action=unregister&userId={ユーザID}
- * -- ?action=send&userId={ユーザID}&mes={送信メッセージ}
+ * http://www.kotemaru.org/2013/07/28/android-push-message.html
  * 
  * 注：いろいろ端折ってます。Googleのサンプルも参照してください。
+ * 
  * @author @kotemaru.org
  */
 
@@ -92,7 +90,8 @@ public class GCMServlet extends HttpServlet {
         } else if ("unregister".equals(action)) {
             // 端末登録解除、Androidから呼ばれる。
             try {
-				db.unregistAndroid(userId);
+				db.logout(userId, registrationId);
+				res.setStatus(200);
 				out.println("unregister ok");
 				return;
 			} catch (SQLException e) {
@@ -104,8 +103,15 @@ public class GCMServlet extends HttpServlet {
         }
     }
     
+    /**
+     * ファイルパスをAndroid端末へ送信する（GCM経由）
+     * @param path
+     * @param sender_id
+     * @throws IOException
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public static void sendPathInfo(String path,String sender_id) throws IOException, ClassNotFoundException, SQLException{
-        // メッセージ送信。任意の送信アプリから呼ばれる。
     	List<String> registers = null;
     	DatabaseClass dba = new DatabaseClass();
 		try {
