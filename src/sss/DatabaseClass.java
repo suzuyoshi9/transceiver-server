@@ -308,6 +308,16 @@ public class DatabaseClass{
     	
     }
     
+    public String getNickname(String username) throws SQLException{
+    	this.Reconnect();
+    	String sql="select nickname from user where name=?";
+    	PreparedStatement pst = this.conn.prepareStatement(sql);
+    	pst.setString(1, username);
+    	ResultSet rs = pst.executeQuery();
+    	if(!rs.next()) throw new SQLException("User NotFound");
+    	return rs.getString("nickname");
+    }
+    
     /**
      * 同ユーザ名のユーザがいるか否か
      * @param username
